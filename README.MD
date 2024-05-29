@@ -35,8 +35,9 @@ arm, arm64, amd64 and i386 architectures are supported.
 * Centos 7 amd64
 * Raspbian Buster
 ### Installing Cloak 2 Plugin
-Copy and execute this command:
+Copy and execute this command as root user:
 ```bash
+sudo su -
 bash Cloak2-Installer.sh
 ```
 Answer questions and wait until the setup finishes installing. Installing the shadowsocks is optional.
