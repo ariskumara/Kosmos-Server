@@ -9,27 +9,18 @@ bash Cloak2-Installer.sh
 
 ### Get information of cloak server:
 ```bash
-cd /etc/cloak
-/etc/cloak# ls
-ckadminclient.json  ckport.txt  ckserver.json  shadowsocks.json  userinfo.db
-
-root@ip-172-31-36-180:/etc/cloak# cat ckadminclient.json
+root@ip-172-31-32-206:/etc# cd cloak/
+root@ip-172-31-32-206:/etc/cloak# cat shadowsocks.json
 {
-        "ProxyMethod":"panel",
-        "EncryptionMethod":"plain",
-        "UID":"gzZkDqFTJXy2VUUd0qwq9g==",
-        "PublicKey":"cEbS8IXl/fF7ZrTjE3Dh4mZ5iTGBQ7RUEEcQ461kaQY=",
-        "ServerName":"www.bing.com",
-        "NumConn":1,
-        "BrowserSig":"chrome",
-        "StreamTimeout": 300
-}
-root@ip-172-31-36-180:/etc/cloak# cat shadowsocks.json
-{
+        "Public IP":"",
+        "Password":"in6KHWwEHZtJmUQS",
+        "Port":"443",
+        "Encryption":"chacha20-ietf-poly1305",
+        "Cloak Proxy Method":"shadowsocks",
         "ProxyMethod":"shadowsocks",
         "EncryptionMethod":"plain",
-        "UID":"iKEnUSpRROW3h5vv8krCtQ==",
-        "PublicKey":"cEbS8IXl/fF7ZrTjE3Dh4mZ5iTGBQ7RUEEcQ461kaQY=",
+        "UID":"coQXCiVUFSUCFk+I1AQQKw==",
+        "PublicKey":"f7aLMAwrw3tVXMZGjqTC3DbW1U4fg/vIeCBy0bWhDUM=",
         "ServerName":"204.79.197.200:443",
         "NumConn":4,
         "BrowserSig":"chrome",
