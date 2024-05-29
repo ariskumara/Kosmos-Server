@@ -6,8 +6,9 @@ sudo su -
 bash Cloak2-Installer.sh
 ```
 
-### Installing Cloak 2 Plugin
-Get information of cloak server:
+
+### Get information of cloak server:
+```bash
 cd /etc/cloak
 /etc/cloak# ls
 ckadminclient.json  ckport.txt  ckserver.json  shadowsocks.json  userinfo.db
@@ -35,5 +36,9 @@ root@ip-172-31-36-180:/etc/cloak# cat shadowsocks.json
         "StreamTimeout": 300
 }
 
+```
+
 ### Check IP Public
+```bash
 curl http://checkip.amazonaws.com
+```
