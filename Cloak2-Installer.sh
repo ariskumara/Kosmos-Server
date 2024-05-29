@@ -489,7 +489,7 @@ echo "Shadowsocks-rust at https://github.com/shadowsocks/shadowsocks-rust"
 echo
 echo
 #Get port
-$PORT = "443"
+PORT = 443
 ckwebaddr="204.79.197.200:443"
 #Check arch
 GetArch
