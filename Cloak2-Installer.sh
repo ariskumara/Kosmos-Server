@@ -490,7 +490,7 @@ echo
 echo
 #Get port
 echo "get port"
-PORT = "433"
+$PORT = "433"
 ckwebaddr="204.79.197.200:443"
 #Check arch
 GetArch
