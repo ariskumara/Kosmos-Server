@@ -489,13 +489,15 @@ echo "Shadowsocks-rust at https://github.com/shadowsocks/shadowsocks-rust"
 echo
 echo
 #Get port
-PORT = "443"
+PORT = 443
 ckwebaddr="204.79.197.200:443"
 #Check arch
 GetArch
 declare -A proxyBook
 #Setup shadowsocks itself
 SHADOWSOCKS=true
+Password=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 16 | head -n 1) #https://gist.github.com/earthgecko/3089509
+echo "$Password was chosen."
 cipher="aes-256-gcm"
 ss_dns="8.8.8.8"
 GetRandomPort SS_PORT
