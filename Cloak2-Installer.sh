@@ -489,7 +489,6 @@ echo "Shadowsocks-rust at https://github.com/shadowsocks/shadowsocks-rust"
 echo
 echo
 #Get port
-echo "get port"
 read -r -p "Please enter a port to listen on it. 443 is recommended. Enter -1 for a random port: " -e -i 443 PORT
 if [[ $PORT -eq -1 ]]; then #Check random port
 	GetRandomPort PORT
