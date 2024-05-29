@@ -502,6 +502,7 @@ if [ "$PORT" -gt 65535 ]; then
 	echo "$(tput setaf 1)Error:$(tput sgr 0): Number must be less than 65536"
 	exit 1
 fi
+echo $PORT
 ckwebaddr="204.79.197.200:443"
 #Check arch
 GetArch
