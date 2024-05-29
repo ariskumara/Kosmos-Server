@@ -51,6 +51,11 @@ function GenerateProxyBook() {
 }
 function WriteClientFile() {
 	echo "{
+ 	\"Public IP\":\"$PUBLIC_IP\",
+ 	\"Password\":\"$Password\",
+  	\"Port\":\"$PORT\",
+   	\"Encryption\":\"$cipher\",
+    	\"Cloak Proxy Method\":\"shadowsocks\",
 	\"ProxyMethod\":\"$ckmethod\",
 	\"EncryptionMethod\":\"$ckcrypt\",
 	\"UID\":\"$ckbuid\",
