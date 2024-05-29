@@ -50,8 +50,9 @@ function GenerateProxyBook() {
 	PROXY_BOOK=${PROXY_BOOK::${#PROXY_BOOK}-2}
 }
 function WriteClientFile() {
+	content=$(curl -L http://checkip.amazonaws.com)
 	echo "{
- 	\"Public IP\":\"$PUBLIC_IP\",
+ 	\"Public IP\":\"$content\",
  	\"Password\":\"$Password\",
   	\"Port\":\"$PORT\",
    	\"Encryption\":\"$cipher\",
