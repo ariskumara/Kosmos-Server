@@ -511,7 +511,7 @@ declare -A proxyBook
 SHADOWSOCKS=true
 Password=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 16 | head -n 1) #https://gist.github.com/earthgecko/3089509
 echo "$Password was chosen."
-cipher="aes-256-gcm"
+cipher="chacha20-ietf-poly1305"
 ss_dns="8.8.8.8"
 GetRandomPort SS_PORT
 proxyBook+=(["shadowsocks"]="t127.0.0.1:$SS_PORT")
