@@ -490,19 +490,7 @@ echo
 echo
 #Get port
 echo "get port"
-read -r -p "Please enter a port to listen on it. 443 is recommended. Enter -1 for a random port: " -e -i 443 PORT
-if [[ $PORT -eq -1 ]]; then #Check random port
-	GetRandomPort PORT
-	echo "I've selected $PORT as your port."
-fi
-if ! [[ $PORT =~ $num_regex ]]; then #Check if the port is valid
-	echo "$(tput setaf 1)Error:$(tput sgr 0) The input is not a valid number"
-	exit 1
-fi
-if [ "$PORT" -gt 65535 ]; then
-	echo "$(tput setaf 1)Error:$(tput sgr 0): Number must be less than 65536"
-	exit 1
-fi
+PORT = "433"
 ckwebaddr="204.79.197.200:443"
 #Check arch
 GetArch
