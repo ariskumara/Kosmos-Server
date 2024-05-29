@@ -111,52 +111,7 @@ function ShowConnectionInfo() {
 	echo "Or just use this string: $SERVER_BASE64"
 }
 function GetArch(){
-	arch=$(uname -m)
-	case $arch in
-	"i386" | "i686") ;;
-	"x86_64")
-		arch=2
-		;;
-	*)
-		if [[ "$arch" =~ "armv" ]]; then
-			arch=${arch:4:1}
-			if [ "$arch" -gt 7 ]; then
-				arch=4
-			else
-				arch=3
-			fi
-		else
-			arch=0
-		fi
-		;;
-	esac
-	if [ "$arch" == "0" ]; then
-		arch=1
-		PrintWarning "Cannot automatically determine architecture."
-	fi
-	echo "1) 386"
-	echo "2) amd64"
-	echo "3) arm"
-	echo "4) arm64"
-	read -r -p "Select your architecture: " -e -i $arch arch
-	case $arch in
-	1)
-		arch="386"
-		;;
-	2)
-		arch="amd64"
-		;;
-	3)
-		arch="arm"
-		;;
-	4)
-		arch="arm64"
-		;;
-	*)
-		echo "$(tput setaf 1)Error:$(tput sgr 0) Invalid option"
-		exit 1
-		;;
-	esac
+	arch="amd64"
 }
 function DownloadAndInstallSSRust() {
 	# Convert the arch
@@ -534,111 +489,17 @@ echo "Shadowsocks-rust at https://github.com/shadowsocks/shadowsocks-rust"
 echo
 echo
 #Get port
-read -r -p "Please enter a port to listen on it. 443 is recommended. Enter -1 for a random port: " -e -i 443 PORT
-if [[ $PORT -eq -1 ]]; then #Check random port
-	GetRandomPort PORT
-	echo "I've selected $PORT as your port."
-fi
-if ! [[ $PORT =~ $num_regex ]]; then #Check if the port is valid
-	echo "$(tput setaf 1)Error:$(tput sgr 0) The input is not a valid number"
-	exit 1
-fi
-if [ "$PORT" -gt 65535 ]; then
-	echo "$(tput setaf 1)Error:$(tput sgr 0): Number must be less than 65536"
-	exit 1
-fi
-#Set redirect ip for cloak; Just like https://gist.github.com/cbeuw/37a9d434c237840d7e6d5e497539c1ca#file-shadowsocks-ck-release-sh-L165
-echo -e "Please enter a redirection IP and port for Cloak (leave blank to set it to 204.79.197.200:443 of bing.com): "
-read -r -p "" ckwebaddr
-[ -z "$ckwebaddr" ] && ckwebaddr="204.79.197.200:443"
+PORT = "443"
+ckwebaddr="204.79.197.200:443"
 #Check arch
 GetArch
 declare -A proxyBook
 #Setup shadowsocks itself
-read -r -p "Do you want to install Shadowsocks with Cloak plugin?(y/n) " -e -i "y" OPTION
-if [[ $OPTION == "y" ]] || [[ $OPTION == "Y" ]]; then
-	SHADOWSOCKS=true
-	ciphers=(aes-128-gcm aes-256-gcm chacha20-ietf-poly1305)
-	#Get password
-	read -r -p "Enter a password for shadowsocks. Leave blank for a random password: " Password
-	if [ "$Password" == "" ]; then
-		Password=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 16 | head -n 1) #https://gist.github.com/earthgecko/3089509
-		echo "$Password was chosen."
-	fi
-	#Get cipher
-	echo
-	for ((i = 0; i < ${#ciphers[@]}; i++)); do
-		echo "$((i + 1))) ${ciphers[$i]}"
-	done
-	read -r -p "Enter the number of cipher you want to use: " -e -i 3 cipher
-	if [ "$cipher" -lt 1 ] || [ "$cipher" -gt 18 ]; then
-		echo "$(tput setaf 1)Error:$(tput sgr 0) Invalid option"
-		exit 1
-	fi
-	cipher=${ciphers[$cipher - 1]}
-	#Get DNS server
-	echo
-	echo "1) Cloudflare"
-	echo "2) Google"
-	echo "3) OpenDNS"
-	echo "4) AdGuard"
-	echo "5) Custom"
-	read -r -p "Which DNS server you want to use? " -e -i 1 ss_dns
-	case $ss_dns in
-	'1')
-		ss_dns="1.1.1.1"
-		;;
-	'2')
-		ss_dns="8.8.8.8"
-		;;
-	'3')
-		ss_dns="208.67.222.222"
-		;;
-	'4')
-		ss_dns="94.140.14.14"
-		;;
-	'5')
-		read -r -p "Please enter your dns server address(One IP only): " -e -i "1.1.1.1" ss_dns
-		;;
-	*)
-		echo "$(tput setaf 1)Error:$(tput sgr 0) Invalid option"
-		exit 1
-		;;
-	esac
-	GetRandomPort SS_PORT
-	proxyBook+=(["shadowsocks"]="t127.0.0.1:$SS_PORT")
-fi
-#Setup other stuff
-read -r -p "Do you want add a custom rule to Cloak?(y/n) " -e -i "n" OPTION
-if [[ $OPTION == "y" ]] || [[ $OPTION == "Y" ]]; then
-	echo "If you want to install Openvpn I recommend you to use this script:"
-	echo "https://github.com/angristan/openvpn-install"
-	echo "At first install it with that script. Then patch the config file according to this: https://github.com/cbeuw/Cloak/wiki/Underlying-proxy-configuration-guides#openvpn"
-	echo "If you want to configure Tor with Cloak read here: https://github.com/cbeuw/Cloak/wiki/Underlying-proxy-configuration-guides#tor"
-	echo "If you have not installed the Openvpn or Tor yet, you can either choose a port for them here and install them later, or Ctrl+C here and go install them, then re-run the script again."
-	echo
-	PrintWarning "Please only use lowercase english characters in \"ProxyMethod\". This string must not be more than 12 characters."
-	while true; do
-		read -r -p "Where the traffic should be forwarded?(For example 127.0.0.1:6252) " ADDRESS
-		read -r -p "What should this be called? Clients must use this name as \"ProxyMethod\" on their computers: " METHOD
-		if [[ ${#METHOD} -gt 12 ]]; then
-			echo "Please choose a method that is less than 12 characters"
-			continue
-		fi
-		read -r -p "Is this a TCP connection?(y/n): " -e -i "y" OPTION
-		if [[ $OPTION == "n" ]] || [[ $OPTION == "N" ]]; then
-			PrintWarning "At client you should run ck-client with \"-u\" argument in order to enable UDP."
-			ADDRESS=d$ADDRESS
-		else
-			ADDRESS=t$ADDRESS
-		fi
-		proxyBook+=(["$METHOD"]="$ADDRESS")
-		read -r -p "Do you want add another custom rule to Cloak?(y/n) " -e -i "n" OPTION
-		if [[ $OPTION == "n" ]] || [[ $OPTION == "N" ]]; then
-			break
-		fi
-	done
-fi
+SHADOWSOCKS=true
+cipher="aes-256-gcm"
+ss_dns="8.8.8.8"
+GetRandomPort SS_PORT
+proxyBook+=(["shadowsocks"]="t127.0.0.1:$SS_PORT")
 if [[ ${#proxyBook[@]} == 0 ]]; then
 	echo "Cannot forward nothing. Please at least choose one rule."
 	exit 1
@@ -763,15 +624,9 @@ elif [[ $distro =~ "Ubuntu" ]]; then
 	fi
 	#Use BBR on user will
 	if ! [ "$(sysctl -n net.ipv4.tcp_congestion_control)" = "bbr" ]; then
-		echo
-		read -r -p "Do you want to use BBR?(y/n) " -e -i "y" OPTION
-		case $OPTION in
-		"y" | "Y")
-			echo 'net.core.default_qdisc=fq' | tee -a /etc/sysctl.conf
-			echo 'net.ipv4.tcp_congestion_control=bbr' | tee -a /etc/sysctl.conf
-			sysctl -p
-			;;
-		esac
+		echo 'net.core.default_qdisc=fq' | tee -a /etc/sysctl.conf
+		echo 'net.ipv4.tcp_congestion_control=bbr' | tee -a /etc/sysctl.conf
+		sysctl -p
 	fi
 elif [[ $distro =~ "Debian" ]] || [[ $distro =~ "Raspbian" ]]; then
 	apt-get -y install iptables-persistent iptables
